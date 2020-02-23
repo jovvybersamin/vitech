@@ -56,14 +56,9 @@ const List = ({ loading: appLoading, setPageName, history }) => {
 
     const handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...pagination };
-
-        console.log("Pager:", pager);
-
         pager.current = pagination.current;
         setPagination(pager);
-
         setParams()
-
         fetch({
             results: pagination.pageSize,
             page: pagination.current,

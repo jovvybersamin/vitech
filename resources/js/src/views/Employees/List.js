@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Table, Row, Col, Input, Button } from 'antd';
 import axios from "axios";
 import { Link } from "react-router-dom"
-
-
 import { connect } from "react-redux"
 import { setPageName } from './../../redux/actions/page';
 import setAuthToken from './../../utils/setAuthToken';
@@ -14,8 +12,6 @@ const columns = [
         dataIndex: 'full_name',
         sorter: true,
         render: (full_name, record) => {
-
-            console.log(record);
             return <Link to={`/employees/${record.id}/edit`} >{full_name}</Link>;
         },
         width: '40%',
@@ -62,11 +58,12 @@ const List = ({ loading: appLoading, setPageName }) => {
 
     }, [appLoading])
 
+    const handleAddNewEmployeeClick = () => {
+        history.push('/employees/create');
+    }
+
     const handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...pagination };
-
-        console.log("Pager:", pager);
-
         pager.current = pagination.current;
         setPagination(pager);
 
@@ -131,7 +128,7 @@ const List = ({ loading: appLoading, setPageName }) => {
                     </Col>
                     <Col span={6}>
                         <div className="flex justify-end">
-                            <Button type="primary" icon="plus" onClick={handleAddNewCustomerClick}>ADD CUSTOMER</Button>
+                            <Button type="primary" icon="plus" onClick={handleAddNewEmployeeClick}>ADD EMPLOYEE</Button>
                         </div>
                     </Col>
                 </Row>
