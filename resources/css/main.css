@@ -1,0 +1,57 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.trigger:hover {
+    color: #1890ff;
+}
+
+.logo {
+    height: 32px;
+    margin: 16px;
+}
+
+
+.layout-login-left {
+    background-position: center center;
+    color: #fff;
+    background-color: rgba(32, 39, 47, 0.85);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.layout-login-left:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.2;
+    background-color: rgba(32, 39, 47, 0.85);
+}
+
+
+.login-background {
+    position: absolute;
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.anticon {
+    vertical-align: 0.120rem !important;
+}
