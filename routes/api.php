@@ -28,15 +28,16 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
 Route::get('/users', 'UserController@index')->name('users.list');
 
 Route::prefix('customers')->group(function () {
-    Route::post('', 'CustomerController@store')->name('users.store');
-    Route::put('{customer}','CustomerController@update')->name('users.update');
-    Route::get('', 'CustomerController@index')->name('users.list');
-    Route::get('{id}', 'CustomerController@show')->name('users.show');
+    Route::post('', 'CustomerController@store')->name('customers.store');
+    Route::put('{customer}','CustomerController@update')->name('customers.update');
+    Route::get('', 'CustomerController@index')->name('customers.list');
+    Route::get('all', 'CustomerController@all')->name('customers.all');
+    Route::get('{id}', 'CustomerController@show')->name('customers.show');
 });
 
 Route::prefix('employees')->group(function () {
-    Route::post('', 'EmployeeController@store')->name('users.store');
-    Route::put('{employee}','EmployeeController@update')->name('users.update');
-    Route::get('', 'EmployeeController@index')->name('users.list');
-    Route::get('{id}', 'EmployeeController@show')->name('users.show');
+    Route::post('', 'EmployeeController@store')->name('employees.store');
+    Route::put('{employee}','EmployeeController@update')->name('employees.update');
+    Route::get('', 'EmployeeController@index')->name('employees.list');
+    Route::get('{id}', 'EmployeeController@show')->name('employees.show');
 });

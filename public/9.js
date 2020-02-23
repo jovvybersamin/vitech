@@ -49,7 +49,9 @@ var CreateAntField = function CreateAntField(AntComponent) {
         type = _ref.type,
         isFocus = _ref.isFocus,
         handleChange = _ref.handleChange,
-        props = _objectWithoutProperties(_ref, ["field", "form", "hasFeedback", "label", "selectOptions", "submitCount", "type", "isFocus", "handleChange"]);
+        _ref$isKeyValuePair = _ref.isKeyValuePair,
+        isKeyValuePair = _ref$isKeyValuePair === void 0 ? false : _ref$isKeyValuePair,
+        props = _objectWithoutProperties(_ref, ["field", "form", "hasFeedback", "label", "selectOptions", "submitCount", "type", "isFocus", "handleChange", "isKeyValuePair"]);
 
     var _useFormikContext = Object(formik__WEBPACK_IMPORTED_MODULE_2__["useFormikContext"])(),
         values = _useFormikContext.values,
@@ -68,7 +70,10 @@ var CreateAntField = function CreateAntField(AntComponent) {
 
     var onChange = function onChange(value) {
       form.setFieldValue(field.name, value);
-      handleChange(setFieldValue, value, touched);
+
+      if (typeof handleChange === 'function') {
+        handleChange(setFieldValue, value, touched);
+      }
     };
 
     var onBlur = function onBlur() {
@@ -87,11 +92,38 @@ var CreateAntField = function CreateAntField(AntComponent) {
 
       console.log(values);
     }, [isFocus]);
+
+    var buildOptions = function buildOptions() {
+      if (isKeyValuePair) {
+        return selectOptions.map(function (pair) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Option, {
+            key: pair.id,
+            value: pair.id,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 59
+            }
+          }, pair.label);
+        });
+      } else {
+        return selectOptions.map(function (name) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Option, {
+            key: name,
+            value: pair.id,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 61
+            }
+          }, name);
+        });
+      }
+    };
+
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "field-container",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 56
+        lineNumber: 67
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(FormItem, {
       label: label,
@@ -100,7 +132,7 @@ var CreateAntField = function CreateAntField(AntComponent) {
       validateStatus: submittedError || touchedError ? "error" : "success",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 57
+        lineNumber: 68
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AntComponent, _extends({}, field, props, {
       onBlur: onBlur,
@@ -108,19 +140,13 @@ var CreateAntField = function CreateAntField(AntComponent) {
       ref: fieldRef,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 65
+        lineNumber: 76
       }
-    }), selectOptions && selectOptions.map(function (name) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Option, {
-        key: name,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 74
-        }
-      }, name);
-    }))));
+    }), selectOptions && buildOptions())));
   };
-};
+}; // source: https://codesandbox.io/s/4x47oznvvx
+// or try this: https://github.com/jannikbuschke/formik-antd
+
 
 var AntSelect = CreateAntField(antd__WEBPACK_IMPORTED_MODULE_1__["Select"]);
 var AntDatePicker = CreateAntField(antd__WEBPACK_IMPORTED_MODULE_1__["DatePicker"]);
@@ -227,12 +253,13 @@ var validationErrors = function validationErrors(errors, dispatch) {
 /*!****************************************************!*\
   !*** ./resources/js/src/redux/actions/customer.js ***!
   \****************************************************/
-/*! exports provided: getCustomer, storeCustomer, updateCustomer, clearCustomer */
+/*! exports provided: getCustomer, getCustomers, storeCustomer, updateCustomer, clearCustomer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCustomer", function() { return getCustomer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCustomers", function() { return getCustomers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeCustomer", function() { return storeCustomer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateCustomer", function() { return updateCustomer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearCustomer", function() { return clearCustomer; });
@@ -306,72 +333,56 @@ var getCustomer = function getCustomer(id) {
     }()
   );
 };
-var storeCustomer = function storeCustomer(customer) {
+var getCustomers = function getCustomers() {
   return (
     /*#__PURE__*/
     function () {
       var _ref2 = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(dispatch) {
-        var config, _localStorage2, token, body, response, data, errors;
+        var _localStorage2, token, response, data, keyValuePairs;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                config = {
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
-                };
                 _localStorage2 = localStorage, token = _localStorage2.token;
 
                 if (token) {
                   Object(_utils_setAuthToken__WEBPACK_IMPORTED_MODULE_2__["default"])(token);
                 }
 
-                body = JSON.stringify({
-                  name: customer.name,
-                  email: customer.email
-                });
-                _context2.prev = 4;
-                _context2.next = 7;
-                return axios.post("/api/customers", body, config);
+                _context2.prev = 2;
+                _context2.next = 5;
+                return axios.get("/api/customers/all");
 
-              case 7:
+              case 5:
                 response = _context2.sent;
                 data = response.data.data;
-                dispatch({
-                  type: _types__WEBPACK_IMPORTED_MODULE_1__["STORE_CUSTOMER"],
-                  payload: {}
+                keyValuePairs = data.map(function (record) {
+                  return {
+                    id: record.id,
+                    label: record.name
+                  };
                 });
-                dispatch(clearCustomer());
-                dispatch(Object(_alert__WEBPACK_IMPORTED_MODULE_4__["setAlert"])('Customer successfully created', 'success', 20000, true));
-                return _context2.abrupt("return", data.id);
+                dispatch({
+                  type: _types__WEBPACK_IMPORTED_MODULE_1__["GET_CUSTOMERS"],
+                  payload: keyValuePairs
+                });
+                _context2.next = 14;
+                break;
 
-              case 15:
-                _context2.prev = 15;
-                _context2.t0 = _context2["catch"](4);
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](2);
+                console.error("Error fetching: /api/customers/all", _context2.t0); // dispatch
 
-                if (_context2.t0.response) {
-                  _context2.next = 19;
-                  break;
-                }
-
-                return _context2.abrupt("return");
-
-              case 19:
-                // dispatch
-                errors = _context2.t0.response.data.errors;
-                Object(_common_validationErrors__WEBPACK_IMPORTED_MODULE_5__["validationErrors"])(errors, dispatch);
-                return _context2.abrupt("return", null);
-
-              case 22:
+              case 14:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[4, 15]]);
+        }, _callee2, null, [[2, 11]]);
       }));
 
       return function (_x2) {
@@ -380,14 +391,14 @@ var storeCustomer = function storeCustomer(customer) {
     }()
   );
 };
-var updateCustomer = function updateCustomer(id, customer) {
+var storeCustomer = function storeCustomer(customer) {
   return (
     /*#__PURE__*/
     function () {
       var _ref3 = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(dispatch) {
-        var config, _localStorage3, token, body, response, errors;
+        var config, _localStorage3, token, body, response, data, errors;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
@@ -406,51 +417,125 @@ var updateCustomer = function updateCustomer(id, customer) {
 
                 body = JSON.stringify({
                   name: customer.name,
-                  email: customer.email,
-                  _method: 'PUT'
+                  email: customer.email
                 });
                 _context3.prev = 4;
                 _context3.next = 7;
-                return axios.post("/api/customers/".concat(id), body, config);
+                return axios.post("/api/customers", body, config);
 
               case 7:
                 response = _context3.sent;
+                data = response.data.data;
+                dispatch({
+                  type: _types__WEBPACK_IMPORTED_MODULE_1__["STORE_CUSTOMER"],
+                  payload: {}
+                });
+                dispatch(clearCustomer());
+                dispatch(Object(_alert__WEBPACK_IMPORTED_MODULE_4__["setAlert"])('Customer successfully created', 'success', 20000, true));
+                return _context3.abrupt("return", data.id);
+
+              case 15:
+                _context3.prev = 15;
+                _context3.t0 = _context3["catch"](4);
+
+                if (_context3.t0.response) {
+                  _context3.next = 19;
+                  break;
+                }
+
+                return _context3.abrupt("return");
+
+              case 19:
+                // dispatch
+                errors = _context3.t0.response.data.errors;
+                Object(_common_validationErrors__WEBPACK_IMPORTED_MODULE_5__["validationErrors"])(errors, dispatch);
+                return _context3.abrupt("return", null);
+
+              case 22:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[4, 15]]);
+      }));
+
+      return function (_x3) {
+        return _ref3.apply(this, arguments);
+      };
+    }()
+  );
+};
+var updateCustomer = function updateCustomer(id, customer) {
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref4 = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(dispatch) {
+        var config, _localStorage4, token, body, response, errors;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                config = {
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
+                _localStorage4 = localStorage, token = _localStorage4.token;
+
+                if (token) {
+                  Object(_utils_setAuthToken__WEBPACK_IMPORTED_MODULE_2__["default"])(token);
+                }
+
+                body = JSON.stringify({
+                  name: customer.name,
+                  email: customer.email,
+                  _method: 'PUT'
+                });
+                _context4.prev = 4;
+                _context4.next = 7;
+                return axios.post("/api/customers/".concat(id), body, config);
+
+              case 7:
+                response = _context4.sent;
                 console.log('Customer Update:', response.data);
                 dispatch({
                   type: _types__WEBPACK_IMPORTED_MODULE_1__["UPDATE_CUSTOMER"],
                   payload: customer
                 });
                 dispatch(Object(_alert__WEBPACK_IMPORTED_MODULE_4__["setAlert"])('Customer successfully updated', 'success', 20000, true));
-                _context3.next = 20;
+                _context4.next = 20;
                 break;
 
               case 13:
-                _context3.prev = 13;
-                _context3.t0 = _context3["catch"](4);
+                _context4.prev = 13;
+                _context4.t0 = _context4["catch"](4);
 
-                if (_context3.t0.response) {
-                  _context3.next = 17;
+                if (_context4.t0.response) {
+                  _context4.next = 17;
                   break;
                 }
 
-                return _context3.abrupt("return");
+                return _context4.abrupt("return");
 
               case 17:
                 // dispatch
-                errors = _context3.t0.response.data.errors;
+                errors = _context4.t0.response.data.errors;
                 Object(_common_validationErrors__WEBPACK_IMPORTED_MODULE_5__["validationErrors"])(errors, dispatch);
-                return _context3.abrupt("return", null);
+                return _context4.abrupt("return", null);
 
               case 20:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, null, [[4, 13]]);
+        }, _callee4, null, [[4, 13]]);
       }));
 
-      return function (_x3) {
-        return _ref3.apply(this, arguments);
+      return function (_x4) {
+        return _ref4.apply(this, arguments);
       };
     }()
   );
@@ -486,258 +571,6 @@ var setPageName = function setPageName(name) {
     });
   };
 };
-
-/***/ }),
-
-/***/ "./resources/js/src/views/Customers/Detail.js":
-/*!****************************************************!*\
-  !*** ./resources/js/src/views/Customers/Detail.js ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _redux_actions_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../redux/actions/page */ "./resources/js/src/redux/actions/page.js");
-/* harmony import */ var _DetailForm__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DetailForm */ "./resources/js/src/views/Customers/DetailForm.js");
-/* harmony import */ var _components_common_Alert__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/common/Alert */ "./resources/js/src/components/common/Alert/index.js");
-/* harmony import */ var _redux_actions_alert__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../../redux/actions/alert */ "./resources/js/src/redux/actions/alert.js");
-/* harmony import */ var _redux_actions_customer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../../redux/actions/customer */ "./resources/js/src/redux/actions/customer.js");
-var _jsxFileName = "C:\\Users\\user\\Documents\\applications\\vitech\\resources\\js\\src\\views\\Customers\\Detail.js";
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-
-
-
-
-
-
-
-
-
-
-
-var Detail = function Detail(_ref) {
-  var setPageName = _ref.setPageName,
-      getCustomer = _ref.getCustomer,
-      clearCustomer = _ref.clearCustomer,
-      storeCustomer = _ref.storeCustomer,
-      updateCustomer = _ref.updateCustomer,
-      clearAlert = _ref.clearAlert,
-      customer = _ref.customer,
-      match = _ref.match;
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    setPageName("customers.list");
-  }, []);
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var id = match.params.id;
-    clearAlert();
-    clearCustomer();
-
-    if (id) {
-      getCustomer(id);
-    }
-
-    console.log('Customer:', customer);
-  }, []);
-
-  var handleSubmit = function handleSubmit(formProps, _ref2) {
-    var setSubmitting = _ref2.setSubmitting,
-        resetForm = _ref2.resetForm;
-    console.log('Customer', customer);
-    console.log('Form Props', formProps);
-
-    if (customer.id) {
-      updateCustomer(customer.id, formProps);
-    } else {
-      storeCustomer(formProps).then(function (response) {
-        if (response) {
-          resetForm();
-        }
-      });
-    }
-
-    setSubmitting(false);
-  };
-
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Row"], {
-    type: "flex",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 50
-    }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Col"], {
-    span: 12,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 51
-    }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
-    className: "text-3xl",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 52
-    }
-  }, customer.id ? 'Customer Detail' : 'New Customer')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Col"], {
-    span: 12,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 54
-    }
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Divider"], {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 59
-    }
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_common_Alert__WEBPACK_IMPORTED_MODULE_7__["default"], {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 61
-    }
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Formik"], {
-    initialValues: customer,
-    enableReinitialize: true,
-    onSubmit: handleSubmit,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 63
-    }
-  }, function (props) {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DetailForm__WEBPACK_IMPORTED_MODULE_6__["default"], _extends({}, props, {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 67
-      }
-    }));
-  }));
-};
-
-var mapStateToProps = function mapStateToProps(_ref3) {
-  var customer = _ref3.customer;
-  return {
-    customer: customer
-  };
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, {
-  setPageName: _redux_actions_page__WEBPACK_IMPORTED_MODULE_5__["setPageName"],
-  getCustomer: _redux_actions_customer__WEBPACK_IMPORTED_MODULE_9__["getCustomer"],
-  clearCustomer: _redux_actions_customer__WEBPACK_IMPORTED_MODULE_9__["clearCustomer"],
-  updateCustomer: _redux_actions_customer__WEBPACK_IMPORTED_MODULE_9__["updateCustomer"],
-  storeCustomer: _redux_actions_customer__WEBPACK_IMPORTED_MODULE_9__["storeCustomer"],
-  clearAlert: _redux_actions_alert__WEBPACK_IMPORTED_MODULE_8__["clearAlert"]
-})(Detail));
-
-/***/ }),
-
-/***/ "./resources/js/src/views/Customers/DetailForm.js":
-/*!********************************************************!*\
-  !*** ./resources/js/src/views/Customers/DetailForm.js ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _components_CreateAntFields_CreateAntFields__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/CreateAntFields/CreateAntFields */ "./resources/js/src/components/CreateAntFields/CreateAntFields.js");
-/* harmony import */ var _components_ValidateFields_ValidateFields__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/ValidateFields/ValidateFields */ "./resources/js/src/components/ValidateFields/ValidateFields.js");
-var _jsxFileName = "C:\\Users\\user\\Documents\\applications\\vitech\\resources\\js\\src\\views\\Customers\\DetailForm.js";
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function (_ref) {
-  var handleSubmit = _ref.handleSubmit,
-      values = _ref.values,
-      submitCount = _ref.submitCount,
-      isValid = _ref.isValid,
-      isSubmitting = _ref.isSubmitting;
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Row"], {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 19
-    }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Col"], {
-    span: 12,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 20
-    }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Form"], {
-    className: "form-container",
-    onSubmit: handleSubmit,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 21
-    }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
-    component: _components_CreateAntFields_CreateAntFields__WEBPACK_IMPORTED_MODULE_4__["AntInput"],
-    name: "name",
-    type: "text",
-    label: "Name",
-    validate: _components_ValidateFields_ValidateFields__WEBPACK_IMPORTED_MODULE_5__["isRequired"],
-    submitCount: submitCount,
-    hasFeedback: true,
-    isFocus: true,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 22
-    }
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
-    component: _components_CreateAntFields_CreateAntFields__WEBPACK_IMPORTED_MODULE_4__["AntInput"],
-    name: "email",
-    type: "email",
-    label: "Email",
-    validate: _components_ValidateFields_ValidateFields__WEBPACK_IMPORTED_MODULE_5__["validateEmail"],
-    submitCount: submitCount,
-    hasFeedback: true,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 33
-    }
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "submit-container",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 43
-    }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(antd__WEBPACK_IMPORTED_MODULE_2__["Button"], {
-    type: "primary",
-    htmlType: "submit",
-    size: "large",
-    disabled: isValid === false,
-    loading: isSubmitting,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 44
-    }
-  }, "Save"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-    to: "/customers",
-    style: {
-      marginLeft: '15px'
-    },
-    className: "ant-btn ant-btn-default ant-btn-lg",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 51
-    }
-  }, "Cancel")))));
-});
 
 /***/ })
 

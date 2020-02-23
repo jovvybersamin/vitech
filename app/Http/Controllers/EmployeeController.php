@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\Employee;
 use App\Http\Requests\EmployeeRequest;
+use App\Http\Resources\CustomerResource;
 use App\Http\Resources\EmployeeCollection;
 use App\Http\Resources\EmployeeResource;
 use Carbon\Carbon;
@@ -80,6 +82,18 @@ class EmployeeController extends Controller
 
         return new EmployeeResource($employee);
     }
+
+    /**
+     * Show a single employee resource from the database.
+     *
+     * @return EmployeeResource
+     */
+    public function show($id)
+    {
+        $employee = Employee::findOrFail($id);
+        return new EmployeeResource($employee);
+    }
+
 
 
     /**

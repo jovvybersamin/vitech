@@ -742,10 +742,13 @@ var CustomerList = react__WEBPACK_IMPORTED_MODULE_0___default.a.lazy(function ()
   return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ./views/Customers/List */ "./resources/js/src/views/Customers/List.js"));
 });
 var CustomerDetail = react__WEBPACK_IMPORTED_MODULE_0___default.a.lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(9)]).then(__webpack_require__.bind(null, /*! ./views/Customers/Detail */ "./resources/js/src/views/Customers/Detail.js"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(9), __webpack_require__.e(11)]).then(__webpack_require__.bind(null, /*! ./views/Customers/Detail */ "./resources/js/src/views/Customers/Detail.js"));
 });
 var EmployeesList = react__WEBPACK_IMPORTED_MODULE_0___default.a.lazy(function () {
   return __webpack_require__.e(/*! import() */ 6).then(__webpack_require__.bind(null, /*! ./views/Employees/List */ "./resources/js/src/views/Employees/List.js"));
+});
+var EmployeeDetail = react__WEBPACK_IMPORTED_MODULE_0___default.a.lazy(function () {
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(9), __webpack_require__.e(3)]).then(__webpack_require__.bind(null, /*! ./views/Employees/Detail */ "./resources/js/src/views/Employees/Detail.js"));
 });
 var UserList = react__WEBPACK_IMPORTED_MODULE_0___default.a.lazy(function () {
   return __webpack_require__.e(/*! import() */ 7).then(__webpack_require__.bind(null, /*! ./views/Users/List */ "./resources/js/src/views/Users/List.js"));
@@ -772,6 +775,16 @@ var routes = [{
   exact: true,
   name: 'Customers',
   component: CustomerList
+}, {
+  path: '/employees/:id/edit',
+  exact: true,
+  name: 'Employee Edit',
+  component: EmployeeDetail
+}, {
+  path: '/employees/create',
+  exact: true,
+  name: 'Employee Create',
+  component: EmployeeDetail
 }, {
   path: '/employees',
   exact: true,

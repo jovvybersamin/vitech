@@ -49,7 +49,9 @@ var CreateAntField = function CreateAntField(AntComponent) {
         type = _ref.type,
         isFocus = _ref.isFocus,
         handleChange = _ref.handleChange,
-        props = _objectWithoutProperties(_ref, ["field", "form", "hasFeedback", "label", "selectOptions", "submitCount", "type", "isFocus", "handleChange"]);
+        _ref$isKeyValuePair = _ref.isKeyValuePair,
+        isKeyValuePair = _ref$isKeyValuePair === void 0 ? false : _ref$isKeyValuePair,
+        props = _objectWithoutProperties(_ref, ["field", "form", "hasFeedback", "label", "selectOptions", "submitCount", "type", "isFocus", "handleChange", "isKeyValuePair"]);
 
     var _useFormikContext = Object(formik__WEBPACK_IMPORTED_MODULE_2__["useFormikContext"])(),
         values = _useFormikContext.values,
@@ -68,7 +70,10 @@ var CreateAntField = function CreateAntField(AntComponent) {
 
     var onChange = function onChange(value) {
       form.setFieldValue(field.name, value);
-      handleChange(setFieldValue, value, touched);
+
+      if (typeof handleChange === 'function') {
+        handleChange(setFieldValue, value, touched);
+      }
     };
 
     var onBlur = function onBlur() {
@@ -87,11 +92,38 @@ var CreateAntField = function CreateAntField(AntComponent) {
 
       console.log(values);
     }, [isFocus]);
+
+    var buildOptions = function buildOptions() {
+      if (isKeyValuePair) {
+        return selectOptions.map(function (pair) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Option, {
+            key: pair.id,
+            value: pair.id,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 59
+            }
+          }, pair.label);
+        });
+      } else {
+        return selectOptions.map(function (name) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Option, {
+            key: name,
+            value: pair.id,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 61
+            }
+          }, name);
+        });
+      }
+    };
+
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "field-container",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 56
+        lineNumber: 67
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(FormItem, {
       label: label,
@@ -100,7 +132,7 @@ var CreateAntField = function CreateAntField(AntComponent) {
       validateStatus: submittedError || touchedError ? "error" : "success",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 57
+        lineNumber: 68
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AntComponent, _extends({}, field, props, {
       onBlur: onBlur,
@@ -108,19 +140,13 @@ var CreateAntField = function CreateAntField(AntComponent) {
       ref: fieldRef,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 65
+        lineNumber: 76
       }
-    }), selectOptions && selectOptions.map(function (name) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Option, {
-        key: name,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 74
-        }
-      }, name);
-    }))));
+    }), selectOptions && buildOptions())));
   };
-};
+}; // source: https://codesandbox.io/s/4x47oznvvx
+// or try this: https://github.com/jannikbuschke/formik-antd
+
 
 var AntSelect = CreateAntField(antd__WEBPACK_IMPORTED_MODULE_1__["Select"]);
 var AntDatePicker = CreateAntField(antd__WEBPACK_IMPORTED_MODULE_1__["DatePicker"]);

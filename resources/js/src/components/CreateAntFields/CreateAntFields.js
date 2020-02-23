@@ -6,17 +6,18 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 const CreateAntField = AntComponent => ({
-        field,
-        form,
-        hasFeedback,
-        label,
-        selectOptions,
-        submitCount,
-        type,
-        isFocus,
-        handleChange,
-        ...props
-    }) => {
+    field,
+    form,
+    hasFeedback,
+    label,
+    selectOptions,
+    submitCount,
+    type,
+    isFocus,
+    handleChange,
+    isKeyValuePair = false,
+    ...props
+}) => {
 
     const {
         values,
@@ -32,24 +33,34 @@ const CreateAntField = AntComponent => ({
         form.setFieldValue(field.name, value);
     const onChange = value => {
         form.setFieldValue(field.name, value);
-        handleChange(setFieldValue, value, touched);
+        if (typeof handleChange === 'function') {
+            handleChange(setFieldValue, value, touched);
+        }
     };
 
     const onBlur = () => form.setFieldTouched(field.name, true);
     const fieldRef = React.useRef(null);
 
     // adding the password type.
-    props = {...props, ...(type === 'password' ? {type} : {})};
+    props = { ...props, ...(type === 'password' ? { type } : {}) };
 
 
 
     React.useEffect(() => {
-        if(isFocus) {
+        if (isFocus) {
             fieldRef.current.focus();
         }
         console.log(values);
-    },[isFocus])
+    }, [isFocus])
 
+
+    const buildOptions = () => {
+        if (isKeyValuePair) {
+            return selectOptions.map(pair => <Option key={pair.id} value={pair.id}>{pair.label}</Option>);
+        } else {
+            return selectOptions.map(name => <Option key={name} value={pair.id}>{name}</Option>);
+        }
+    }
 
 
     return (
@@ -68,15 +79,18 @@ const CreateAntField = AntComponent => ({
                     onBlur={onBlur}
                     onChange={type ? onInputChange : onChange}
                     ref={fieldRef}
-
                 >
-                    {selectOptions &&
-                    selectOptions.map(name => <Option key={name}>{name}</Option>)}
+                    {selectOptions && buildOptions()}
                 </AntComponent>
             </FormItem>
         </div>
     );
 };
+
+
+
+// source: https://codesandbox.io/s/4x47oznvvx
+// or try this: https://github.com/jannikbuschke/formik-antd
 
 export const AntSelect = CreateAntField(Select);
 export const AntDatePicker = CreateAntField(DatePicker);

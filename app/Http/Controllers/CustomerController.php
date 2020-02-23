@@ -48,6 +48,17 @@ class CustomerController extends Controller
     }
 
     /**
+     * Get all the customers useful for selects.
+     *
+     * @return CustomerCollection
+     */
+    public function all()
+    {
+        $collections = Customer::orderBy('name','asc')->get();
+        return new CustomerCollection($collections);
+    }
+
+    /**
      * Store the customer resource to the database.
      *
      * @return CustomerResource
