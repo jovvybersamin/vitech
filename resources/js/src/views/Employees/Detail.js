@@ -56,8 +56,6 @@ const Detail = ({ setPageName, getEmployee, clearEmployee, storeEmployee, update
                 setSubmitting(false);
             });
         }
-
-
     }
 
     return (

@@ -25,8 +25,9 @@ function Login({ login, isAuthenticated, loading, location }) {
     }, [])
 
     const handleSubmit = (formProps, action) => {
-        login(formProps.email, formProps.password);
-        action.setSubmitting(false);
+        login(formProps.email, formProps.password).then(() => {
+            action.setSubmitting(false);
+        });
     }
 
     if (isAuthenticated) {

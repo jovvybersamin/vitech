@@ -30,8 +30,6 @@ export const login = (email, password) => async dispatch => {
             }
         });
 
-        console.log('dispatching');
-
         dispatch(loadUser(false));
 
     } catch (err) {
