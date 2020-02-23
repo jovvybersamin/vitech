@@ -120,14 +120,21 @@ const List = ({ loading: appLoading, setPageName }) => {
                 <Col span={12}>
                     <h1 className="text-3xl">Employees List</h1>
                 </Col>
-                <Col span={12}>
-                    <Input.Search
-                        allowClear
-                        placeholder="Search by name, customer"
-                        onSearch={handleSearchInput}
-                        style={{ lineHeight: 4 }}
-                    />
-                </Col>
+                <Row type="flex" align="middle" justify="end">
+                    <Col span={16}>
+                        <Input.Search
+                            allowClear
+                            placeholder="Search by name, customer"
+                            onSearch={handleSearchInput}
+                            style={{ lineHeight: 4 }}
+                        />
+                    </Col>
+                    <Col span={6}>
+                        <div className="flex justify-end">
+                            <Button type="primary" icon="plus" onClick={handleAddNewCustomerClick}>ADD CUSTOMER</Button>
+                        </div>
+                    </Col>
+                </Row>
             </Row>
 
             <Table

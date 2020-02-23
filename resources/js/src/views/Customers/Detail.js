@@ -33,16 +33,19 @@ const Detail = ({ setPageName, getCustomer, clearCustomer, storeCustomer, update
         console.log('Form Props', formProps);
 
         if (customer.id) {
-            updateCustomer(customer.id, formProps);
+            updateCustomer(customer.id, formProps).then((response) => {
+                setSubmitting(false);
+            });
         } else {
             storeCustomer(formProps).then(response => {
                 if (response) {
                     resetForm();
                 }
+                setSubmitting(false);
             });
         }
 
-        setSubmitting(false);
+
     }
 
     return (

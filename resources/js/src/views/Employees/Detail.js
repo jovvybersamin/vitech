@@ -44,20 +44,20 @@ const Detail = ({ setPageName, getEmployee, clearEmployee, storeEmployee, update
             customer_id: formProps.customer_id
         };
 
-        console.log('Body', body);
-
         if (employee.id) {
-            updateEmployee(employee.id, body);
-
+            updateEmployee(employee.id, body).then(response => {
+                setSubmitting(false);
+            });
         } else {
             storeEmployee(body).then(response => {
                 if (response) {
                     resetForm();
                 }
+                setSubmitting(false);
             });
         }
 
-        setSubmitting(false);
+
     }
 
     return (
